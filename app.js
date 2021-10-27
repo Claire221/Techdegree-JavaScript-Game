@@ -1,7 +1,8 @@
 const keyboard = document.getElementById("qwerty");
-const phrase = document.getElementById("phrase");
+const phrase = document.getElementById("phrase").getElementsByTagName("UL")[0];
 const startButton = document.getElementsByClassName("btn__reset")[0];
-let letters = [];
+const letters = [];
+
 
 let missed = 0;
 // const phrases = [
@@ -15,14 +16,14 @@ let missed = 0;
 
 const phrases = [
     "hello how are you",
-    "shadow is a god",
+    "shadow is a dog",
     "yesterday has gone",
     "elephants are big",
     "i suppose so"
 
 ];
 
-const phraseArray = getRandomPhraseAsArray(phrases);
+// const phraseArray = getRandomPhraseAsArray(phrases);
 
 
 startButton.addEventListener("click", startGame);
@@ -31,61 +32,102 @@ startButton.addEventListener("click", startGame);
 function startGame(){
     const gameContainer = document.getElementById("overlay");
     gameContainer.style.display = "none";
+
+    getRandomPhraseAsArray(phrases)
 };
 
-
-// function to randomly choose a quote from array 
 function getRandomPhraseAsArray(arr){
-    const selectQuote = Math.floor(Math.random()* arr.length);
-    let chosenQuote = arr[selectQuote];
+    const selectQuote = Math.floor(Math.random() * arr.length);
+    const chosenQuote = arr[selectQuote];
 
     for(var i = 0; i < chosenQuote.length; i++){
         letters.push(chosenQuote[i])
     };
+
+    // console.log(letters)
+    addPhraseToDisplay(letters)
 };
 
 // function to create li from each letter and append it to the ul
 function addPhraseToDisplay(arr){
-    for(var i = 0; i < letters.length; i++){
-        var li = document.createElement("li")
-        var text = document.createTextNode(letters[i]);
-        li.appendChild(text);
-        phrase.appendChild(li)
+    for(var i = 0; i < arr.length; i++){
         
-        if(letters[i] === " "){
-            console.log("space")
+        // create a list item
+        const listItem = document.createElement("li")
+        // put the character inside of the list item
+        listItem.textContent = letters[i];
+        // append that list item to the #phrase ul
+        phrase.appendChild(listItem);
+        
+       
+         if(letters[i] === " "){
+            listItem.className = 'space';
         } else {
-            li.classList.add("letter");
+            listItem.classList.add("letter");
         }
+
     }
+    console.log(phrase)
 };
 
 
+function checkLetter(guess){
+    // get all of the elements with a class of “letter” 
+    const li = document.getElementById("phrase").getElementsByTagName("li");
+    // console.log(li)
+    // variable to store matched letters in
+    var matchingLetter = null;
+     //loop over the letters in the phrase
+    for(var i = 0; i < li.length; i++) {
+        console.log(li[i])
+         // if the letter has the letter class "letter"
+        if(li[i].classList.contains("letter")) {
+          
+           //check to see if the button they chose is a match
+           if(li[i] === guess) {
+               // add the show class
+                pressedLetter.classList.add("show")
+                // add the letter to the matchingLetter variable 
+                matchingLetter.push(li[i])
 
-
-document.addEventListener('keypress', function(){
-    const key = event.key 
-
-    function checkLetter(key){
-        var letterClass = document.getElementsByClassName("letter");
-        var matchingLetter = "";
-    
-        for(var i = 0; i <letterClass.length; i++){
-            if(letterClass === key) {
-                key.classList.add("show")
-                matchingLetter.push(letterClass[i])
-                return letterClass[i]
-            } else {
-                return null 
+                } else {
+                    //If a match wasn’t found, the function should return null.
+                    return null 
             }
-        };
-        console.log(key)
-        console.log(key)
-    };
-    
+        }
+    }
+}
 
-    key.classList.add("chosen")
+
+keyboard.addEventListener("click", function(){
+    const pressedLetter = event.target;
+    // console.log(pressedLetter)
+
+    // if chosent letter doesnt already contain the chosen class
+    if (!pressedLetter.classList.contains("chosen")){
+        //set chosen button to diabled
+        pressedLetter.setAttribute('disabled', '');
+        // add the chosen class
+        pressedLetter.classList.add("chosen")
+        // store the checkletter function in a variable 
+
+    } else {
+        // add a point to the missed variable if wrong letter is chosen
+        missed++
+
+        // get the scoreboard which containes all the lives
+        const scoreboard = document.querySelector('#scoreboard').firstElementChild;
+        //remove a try
+        const tries = docuemnt.querySelectorAll(".tries");
+        scoreboard.removeChild( tries[0] );
+        
+    }
+    checkLetter(pressedLetter)
 });
 
-getRandomPhraseAsArray(phrases);
-addPhraseToDisplay(phrases)
+
+// getRandomPhraseAsArray(phrases);
+// getRandomPhraseAsArray(phrases)
+// console.log(letter)
+
+startGame(phrases)
