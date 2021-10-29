@@ -1,38 +1,37 @@
-const keyboard = document.getElementById("qwerty");
-const phrase = document.getElementById("phrase").getElementsByTagName("UL")[0];
-const startButton = document.getElementsByClassName("btn__reset")[0];
-const letters = [];
-
-
+var keyboard = document.getElementById("qwerty");
+var phrase = document.getElementById("phrase").getElementsByTagName("UL")[0];
+var startButton = document.getElementsByClassName("btn__reset")[0];
+var letters = [];
+var gameContainer = document.getElementById("overlay");
+var listItem = document.createElement("li")
 let missed = 0;
-// const phrases = [
-//     "When the whole world is silent even one voice becomes powerful",
-//     "Knowing what must be done does away with fear",
-//     "I didnt get there by wishing for it or hoping for it but by working for it",
-//     "You can waste your lives drawing lines. Or you can live your life crossing them",
-//     "Id rather regret the things I've done than regret the things I haven't done"
-
-// ]
 
 const phrases = [
-    "hello how are you",
-    "shadow is a dog",
-    "yesterday has gone",
-    "elephants are big",
-    "i suppose so"
+    "Every day is Halloween isnt it For some of us",
+    "There is something haunting in the light of the moon",
+    "I'm so glad I live in a world where there are Octobers",
+    "Where there is no imagination, there is no horror.",
+    "It's Halloween, everyone's entitled to one good scare"
 
-];
+]
+
+// const phrases = [
+//     "hello how are you",
+//     "shadow is a dog",
+//     "yesterday has gone",
+//     "elephants are big",
+//     "i suppose so"
+
+// ];
 
 // const phraseArray = getRandomPhraseAsArray(phrases);
-
 
 startButton.addEventListener("click", startGame);
 
 //function to start game and get rid of title screen
 function startGame(){
-    const gameContainer = document.getElementById("overlay");
+    // const gameContainer = document.getElementById("overlay");
     gameContainer.style.display = "none";
-
     getRandomPhraseAsArray(phrases)
 };
 
@@ -51,7 +50,6 @@ function getRandomPhraseAsArray(arr){
 // function to create li from each letter and append it to the ul
 function addPhraseToDisplay(arr){
     for(var i = 0; i < arr.length; i++){
-        
         // create a list item
         const listItem = document.createElement("li")
         // put the character inside of the list item
@@ -67,41 +65,33 @@ function addPhraseToDisplay(arr){
         }
 
     }
-    console.log(phrase)
+    // console.log(phrase)
 };
 
 
 function checkLetter(guess){
     // get all of the elements with a class of “letter” 
     const li = document.getElementById("phrase").getElementsByTagName("li");
-    // console.log(li)
+
     // variable to store matched letters in
     var matchingLetter = null;
-     //loop over the letters in the phrase
+    //loop over the letters in the phrase
     for(var i = 0; i < li.length; i++) {
-        console.log(li[i])
-         // if the letter has the letter class "letter"
-        if(li[i].classList.contains("letter")) {
-          
            //check to see if the button they chose is a match
-           if(li[i] === guess) {
+           if(li[i].innerText === guess) {
                // add the show class
-                pressedLetter.classList.add("show")
+               li[i].classList.add('show');
                 // add the letter to the matchingLetter variable 
-                matchingLetter.push(li[i])
-
-                } else {
-                    //If a match wasn’t found, the function should return null.
-                    return null 
+                matchingLetter += guess.textContent
             }
-        }
     }
-}
+    return matchingLetter
+};
 
 
 keyboard.addEventListener("click", function(){
     const pressedLetter = event.target;
-    // console.log(pressedLetter)
+    const pressedLetterValue = pressedLetter.innerText
 
     // if chosent letter doesnt already contain the chosen class
     if (!pressedLetter.classList.contains("chosen")){
@@ -111,23 +101,34 @@ keyboard.addEventListener("click", function(){
         pressedLetter.classList.add("chosen")
         // store the checkletter function in a variable 
 
-    } else {
-        // add a point to the missed variable if wrong letter is chosen
-        missed++
-
-        // get the scoreboard which containes all the lives
-        const scoreboard = document.querySelector('#scoreboard').firstElementChild;
-        //remove a try
-        const tries = docuemnt.querySelectorAll(".tries");
-        scoreboard.removeChild( tries[0] );
-        
+        const checked = checkLetter(pressedLetterValue)
+        if(checked === null) {
+            // get the image tags that have the hearts image in them
+            const tries = document.querySelectorAll('.tries img');
+            //swaps heart image for lost heart immage
+            tries[missed].src = 'images/lostHeart.png';
+            //adds point to missed variable
+            missed++
+        }
     }
-    checkLetter(pressedLetter)
+    checkWin()
+
 });
 
-
-// getRandomPhraseAsArray(phrases);
-// getRandomPhraseAsArray(phrases)
-// console.log(letter)
-
+function checkWin () {
+    const showClass = document.getElementsByClassName("show")
+    const letterClass = document.getElementsByClassName("letters")
+    
+    if (showClass.length && letterClass.length) {
+        if(showClass.length === letterClass.length){
+            overlay.className = 'win';
+            overlay.style.display = 'flex';
+            console.log(letterClass)
+            console.log(showClass)
+        }
+    } else if (missed >= 5){
+        gameContainer.className = 'lose';
+        gameContainer.style.display = 'flex';
+    }
+}
 startGame(phrases)
