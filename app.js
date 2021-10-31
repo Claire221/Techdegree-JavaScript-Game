@@ -7,22 +7,13 @@ var listItem = document.createElement("li")
 let missed = 0;
 
 const phrases = [
-    "Every day is Halloween isnt it For some of us",
-    "There is something haunting in the light of the moon",
-    "I'm so glad I live in a world where there are Octobers",
-    "Where there is no imagination, there is no horror.",
-    "It's Halloween, everyone's entitled to one good scare"
+    "everything you can imagine is real",
+    "every moment is a fresh beginning",
+    "die with memories not dreams",
+    "it hurt because it mattered",
+    "turn your wounds into wisdom"
 
 ]
-
-// const phrases = [
-//     "hello how are you",
-//     "shadow is a dog",
-//     "yesterday has gone",
-//     "elephants are big",
-//     "i suppose so"
-
-// ];
 
 // const phraseArray = getRandomPhraseAsArray(phrases);
 
@@ -30,7 +21,6 @@ startButton.addEventListener("click", startGame);
 
 //function to start game and get rid of title screen
 function startGame(){
-    // const gameContainer = document.getElementById("overlay");
     gameContainer.style.display = "none";
     getRandomPhraseAsArray(phrases)
 };
@@ -63,9 +53,7 @@ function addPhraseToDisplay(arr){
         } else {
             listItem.classList.add("letter");
         }
-
     }
-    // console.log(phrase)
 };
 
 
@@ -118,17 +106,18 @@ keyboard.addEventListener("click", function(){
 function checkWin () {
     const showClass = document.getElementsByClassName("show")
     const letterClass = document.getElementsByClassName("letters")
+    const title = document.getElementsByClassName('title')[0]
     
-    if (showClass.length && letterClass.length) {
-        if(showClass.length === letterClass.length){
-            overlay.className = 'win';
-            overlay.style.display = 'flex';
-            console.log(letterClass)
-            console.log(showClass)
-        }
-    } else if (missed >= 5){
+    // console.log(showClass);
+    // console.log(letterClass)
+
+    if(showClass.length === letterClass.length){
+        gameContainer.className = 'win';
+    }
+    else if (missed >= 5){
         gameContainer.className = 'lose';
         gameContainer.style.display = 'flex';
+        title.innerHTML = "Sorry you lost!";
     }
+
 }
-startGame(phrases)
