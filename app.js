@@ -15,8 +15,6 @@ const phrases = [
 
 ]
 
-// const phraseArray = getRandomPhraseAsArray(phrases);
-
 startButton.addEventListener("click", startGame);
 
 //function to start game and get rid of title screen
@@ -33,7 +31,6 @@ function getRandomPhraseAsArray(arr){
         letters.push(chosenQuote[i])
     };
 
-    // console.log(letters)
     addPhraseToDisplay(letters)
 };
 
@@ -81,23 +78,26 @@ keyboard.addEventListener("click", function(){
     const pressedLetter = event.target;
     const pressedLetterValue = pressedLetter.innerText
 
-    // if chosent letter doesnt already contain the chosen class
-    if (!pressedLetter.classList.contains("chosen")){
-        //set chosen button to diabled
-        pressedLetter.setAttribute('disabled', '');
-        // add the chosen class
-        pressedLetter.classList.add("chosen")
-        // store the checkletter function in a variable 
 
-        const checked = checkLetter(pressedLetterValue)
-        if(checked === null) {
-            // get the image tags that have the hearts image in them
-            const tries = document.querySelectorAll('.tries img');
-            //swaps heart image for lost heart immage
-            tries[missed].src = 'images/lostHeart.png';
-            //adds point to missed variable
-            missed++
-        }
+    // if chosent letter doesnt already contain the chosen class
+    if (event.target.tagName === 'BUTTON' && !pressedLetter.classList.contains("chosen")) {
+        
+            //set chosen button to diabled
+            pressedLetter.setAttribute('disabled', '');
+            // add the chosen class
+            pressedLetter.classList.add("chosen")
+            // store the checkletter function in a variable 
+
+            const checked = checkLetter(pressedLetterValue)
+            if(checked === null) {
+                // get the image tags that have the hearts image in them
+                const tries = document.querySelectorAll('.tries img');
+                //swaps heart image for lost heart immage
+                tries[missed].src = 'images/lostHeart.png';
+                //adds point to missed variable
+                missed++
+            }
+        
     }
     checkWin()
 
@@ -105,14 +105,13 @@ keyboard.addEventListener("click", function(){
 
 function checkWin () {
     const showClass = document.getElementsByClassName("show")
-    const letterClass = document.getElementsByClassName("letters")
+    const letterClass = document.getElementsByClassName("letter")
     const title = document.getElementsByClassName('title')[0]
     
-    // console.log(showClass);
-    // console.log(letterClass)
-
     if(showClass.length === letterClass.length){
+        gameContainer.style.display = "flex";
         gameContainer.className = 'win';
+        title.innerHTML = "Congratulations youve won!";
     }
     else if (missed >= 5){
         gameContainer.className = 'lose';
