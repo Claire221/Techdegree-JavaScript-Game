@@ -112,11 +112,17 @@ function checkWin () {
         gameContainer.style.display = "flex";
         gameContainer.className = 'win';
         title.innerHTML = "Congratulations youve won!";
+        startButton.addEventListener("click", function(){
+            location.reload();
+        })
     }
     else if (missed >= 5){
         gameContainer.className = 'lose';
         gameContainer.style.display = 'flex';
         title.innerHTML = "Sorry you lost!";
+        startButton.addEventListener("click", function(){
+            location.reload();
+        })
     }
 
 }
